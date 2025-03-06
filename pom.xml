@@ -101,12 +101,6 @@
 			<version>2.20.0</version> <!-- Use the latest version -->
 		</dependency>
 
-
-		<dependency>
-			<groupId>RestAssured</groupId>
-			<artifactId>RestAssured</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 
