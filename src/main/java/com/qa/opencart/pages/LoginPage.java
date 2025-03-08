@@ -15,6 +15,7 @@ public class LoginPage
 	
 	//1.By locator
 	private By emailId=By.id("input-email");
+	private By emailId12=By.id("input-email12");
 	private By password=By.id("input-password");
 	private By loginBtn=By.xpath("//input[@value='Login']");
 	private By logoImage=By.cssSelector("img[title='naveenopencart']");
