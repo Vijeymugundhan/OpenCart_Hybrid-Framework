@@ -12,7 +12,7 @@ pipeline
         stage("Build")
         {
 			steps {
-                sh '/path/to/maven/bin/mvn clean install'
+               echo("Running the script from development")
             }
             
         }
@@ -25,7 +25,7 @@ pipeline
                 catchError(buildResult: 'SUCCESS' , stageResult: 'FAILURE' )
                 {
                 git 'https://github.com/Vijeymugundhan/OpenCart_Hybrid-Framework'
-                sh "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/Regression_Test.xml"
+                bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/Regression_Test.xml"
                 }
             }
             
@@ -85,7 +85,7 @@ pipeline
                 catchError(buildResult: 'SUCCESS' , stageResult: 'FAILURE' )
                 {
                 git 'https://github.com/Vijeymugundhan/OpenCart_Hybrid-Framework'
-                sh "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/Smoke_Test.xml"
+                bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/Smoke_Test.xml"
                 }
             }
             
