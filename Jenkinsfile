@@ -2,48 +2,75 @@ pipeline
 {
     agent any
     
+    tools
+    {
+		maven 'maven'
+	}
+    
     stages
     {
         stage("Build")
         {
             steps
             {
-                echo("Build project")
+                echo("running the development script")
+                
             }
             
         }
-        stage("Run UTs")
-        {
-            steps
-            {
-                echo("run unit test cases")
-            }
-            
-        }
-        stage("Deploy to DEV")
-        {
-            steps
-            {
-                echo("dev deployment")
-            }
-            
-        }
+
         stage("Deploy to QA")
         {
             steps
             {
-                echo("QA Deployment")
+                echo("running the test automation regression scripts")
+                catchError(buildResult: 'SUCCESS' , stageResult: 'FAILURE' )
+                {
+                git 'https://github.com/Vijeymugundhan/OpenCart_Hybrid-Framework'
+                sh "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/Regression_Test.xml"
+                }
             }
             
         }
-        stage("Run Autoamtion Regression Test")
+        stage("Publish Allure Reports")
         {
             steps
             {
-                echo("running regression automation test cases")
+				script
+				{
+					allure([
+						includeProperties: false,
+						jdk: '',
+						properties: [],
+						reportBuildPolicy: 'ALWAYS',
+						results:[[path: '/allure-results']]
+					])
+					
+				}
+          
             }
             
         }
+        
+         stage("Publish Extent Reports")
+        {
+            steps
+            {				
+				publishHTML([allowMissing: false,
+				alwaysLinkToLastBuild: false
+				keepAll: true,
+				reportDir: 'reports',
+				reportFiles: 'TestExecutionReport.html',
+				reportName: 'HTML Extent Report',
+				reportTitles: ''])
+            }
+            
+        }
+        
+        
+        
+        
+        
          stage("Deploy to Stage")
         {
             steps
@@ -56,10 +83,32 @@ pipeline
         {
             steps
             {
-                echo("running sanity automation test cases")
+                 echo("running the test automation sanity scripts")
+                catchError(buildResult: 'SUCCESS' , stageResult: 'FAILURE' )
+                {
+                git 'https://github.com/Vijeymugundhan/OpenCart_Hybrid-Framework'
+                sh "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/Smoke_Test.xml"
+                }
             }
             
         }
+        
+        stage("Publish sanity Extent Reports")
+        {
+            steps
+            {				
+				publishHTML([allowMissing: false,
+				alwaysLinkToLastBuild: false
+				keepAll: true,
+				reportDir: 'reports',
+				reportFiles: 'TestExecutionReport.html',
+				reportName: 'HTML Sanity Extent Report',
+				reportTitles: ''])
+            }
+            
+        }
+        
+        
         stage("Deploy to Prod")
         {
             steps

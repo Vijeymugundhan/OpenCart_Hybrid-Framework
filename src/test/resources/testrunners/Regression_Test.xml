@@ -1,6 +1,7 @@
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Open Cart App Regression Suite" verbose="4">
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="OpenCart regression Suite" parallel="tests" thread-count="3"
+	verbose="4">
 	<listeners>
 
 		<listener class-name="com.qa.opencart.listeners.ExtentReportListener"></listener>
@@ -8,18 +9,24 @@
 		<listener class-name="com.qa.opencart.listeners.AnnotationTransformer"></listener>
 	</listeners>
 
-	<!-- Define a test -->
-	<test name="Login PageTests">
+
+	<test name="Login Test">
+
+		<classes>
+			<class name="com.qa.opencart.test.LoginPageTest" />
+		</classes>
+	</test>
+	
+	<test name="Account Page Tests">
 
 		<!-- Define classes to include in this test -->
 		<classes>
-			<class name="com.qa.opencart.test.LoginPageTest" />
-
+			<class name="com.qa.opencart.test.AccountsPageTest" />
 
 		</classes>
 	</test>
-
-	<test name="Account Page Tests">
+	
+	<test name="Product Page Tests">
 
 		<!-- Define classes to include in this test -->
 		<classes>
@@ -29,4 +36,4 @@
 	</test>
 
 
-</suite>
+</suite> 
