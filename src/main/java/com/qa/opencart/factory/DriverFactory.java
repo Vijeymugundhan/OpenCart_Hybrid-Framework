@@ -58,7 +58,7 @@ public class DriverFactory
 			if(Boolean.parseBoolean(prop.getProperty("remote")))
 			{
 				System.out.println("Remote is true and entering into docker space--------------------");
-				init_remoteDriver(prop,"chrome");
+				init_remoteDriver("chrome");
 			}
 			else
 			{
@@ -74,7 +74,7 @@ public class DriverFactory
 		{
 			if(Boolean.parseBoolean(prop.getProperty("firefox")))
 			{
-				init_remoteDriver(prop,"firefox");
+				init_remoteDriver("firefox");
 			}
 			else
 			{
@@ -89,7 +89,7 @@ public class DriverFactory
 		{
 			if(Boolean.parseBoolean(prop.getProperty("edge")))
 			{
-				init_remoteDriver(prop,"edge");
+				init_remoteDriver("edge");
 			}
 			else
 			{
@@ -144,7 +144,18 @@ public class DriverFactory
 		else if(browser.equals("firefox"))
 		{
 			try {
-				tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")),optionsManager.getFirefoxOptions()));
+				tlDriver.set(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"),optionsManager.getFirefoxOptions()));
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		else if(browser.equals("edge"))
+		{
+			try {
+				tlDriver.set(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"),optionsManager.getEdgeOptions()));
+				//tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")),optionsManager.getEdgeOptions()));
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
