@@ -72,13 +72,16 @@ public class DriverFactory
 		}
 		else if(browserName.equals("firefox"))
 		{
-			if(Boolean.parseBoolean(prop.getProperty("firefox")))
+			if(Boolean.parseBoolean(prop.getProperty("remote")))
 			{
+				System.out.println("Remote is true and entering into docker space--------------------");
 				init_remoteDriver("firefox");
 			}
 			else
 			{
                 //local run
+				System.out.println("Remote is false and entering into local space--------------------");
+				
 				WebDriverManager.firefoxdriver().setup();
 				tlDriver.set(new FirefoxDriver(optionsManager.getFirefoxOptions()));
 				
@@ -87,15 +90,18 @@ public class DriverFactory
 		}
 		else if(browserName.equals("edge"))
 		{
-			if(Boolean.parseBoolean(prop.getProperty("edge")))
+			if(Boolean.parseBoolean(prop.getProperty("remote")))
 			{
+				System.out.println("Remote is true and entering into docker space--------------------");
 				init_remoteDriver("edge");
 			}
 			else
 			{
                 //local run
-				WebDriverManager.firefoxdriver().setup();
-				tlDriver.set(new EdgeDriver(optionsManager.getEdgeOptions()));
+				System.out.println("Remote is false and entering into local space--------------------");
+				init_remoteDriver("edge");
+//				WebDriverManager.firefoxdriver().setup();
+//				tlDriver.set(new EdgeDriver(optionsManager.getEdgeOptions()));
 				
 			}
 			
@@ -135,7 +141,7 @@ public class DriverFactory
 		{
 			try {
 				
-				tlDriver.set(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), optionsManager.getChromeOptions()));
+				tlDriver.set(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"),optionsManager.getChromeOptions()));
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -154,8 +160,8 @@ public class DriverFactory
 		else if(browser.equals("edge"))
 		{
 			try {
-				tlDriver.set(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"),optionsManager.getEdgeOptions()));
-				//tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")),optionsManager.getEdgeOptions()));
+			
+				tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")),optionsManager.getEdgeOptions()));
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
