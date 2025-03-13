@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -14,6 +16,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import com.qa.opencart.errors.AppError;
@@ -52,20 +55,57 @@ public class DriverFactory
 		browserName = browserName.toLowerCase();
 		if(browserName.equals("chrome"))
 		{
-			WebDriverManager.chromedriver().setup();
-			tlDriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
+			if(Boolean.parseBoolean(prop.getProperty("remote")))
+			{
+				System.out.println("Remote is true and entering into docker space--------------------");
+				init_remoteDriver(prop,"chrome");
+			}
+			else
+			{
+				//local run
+				System.out.println("Remote is false and entering into local space--------------------");
+				WebDriverManager.chromedriver().setup();
+				tlDriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
+				
+			}
+			
 		}
 		else if(browserName.equals("firefox"))
 		{
-			WebDriverManager.firefoxdriver().setup();
-			tlDriver.set(new FirefoxDriver(optionsManager.getFirefoxOptions()));
+			if(Boolean.parseBoolean(prop.getProperty("firefox")))
+			{
+				init_remoteDriver(prop,"firefox");
+			}
+			else
+			{
+                //local run
+				WebDriverManager.firefoxdriver().setup();
+				tlDriver.set(new FirefoxDriver(optionsManager.getFirefoxOptions()));
+				
+			}
+			
 		}
 		else if(browserName.equals("edge"))
 		{
+			if(Boolean.parseBoolean(prop.getProperty("edge")))
+			{
+				init_remoteDriver(prop,"edge");
+			}
+			else
+			{
+                //local run
+				WebDriverManager.firefoxdriver().setup();
+				tlDriver.set(new EdgeDriver(optionsManager.getEdgeOptions()));
+				
+			}
+			
+			
+			
 			tlDriver.set(new EdgeDriver());
 		}
 		else if(browserName.equals("safari"))
 		{
+			//only local execution is possible. safari is not supported by docker
 			tlDriver.set(new SafariDriver());
 		}
 		else
@@ -85,6 +125,39 @@ public class DriverFactory
 		
 	}
 	
+	
+	// remote execution
+	private void init_remoteDriver(String browser) 
+	{
+		
+		System.out.println("Running test cases in remote machine.......with browser:" + browser);
+		if(browser.equals("chrome"))
+		{
+			try {
+				
+				tlDriver.set(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), optionsManager.getChromeOptions()));
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else if(browser.equals("firefox"))
+		{
+			try {
+				tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")),optionsManager.getFirefoxOptions()));
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			System.out.println("Please pass the right browser for remote execution..."+ browser);
+		}
+		
+		
+	}
+
 	public static synchronized WebDriver getDriver()
 	{
 		return tlDriver.get();

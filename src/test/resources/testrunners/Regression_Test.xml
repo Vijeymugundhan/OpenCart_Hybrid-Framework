@@ -11,6 +11,7 @@
 
 
 	<test name="Login Test">
+	<parameter name="browser" value="chrome"></parameter>
 
 		<classes>
 			<class name="com.qa.opencart.test.LoginPageTest" />
@@ -18,7 +19,7 @@
 	</test>
 	
 	<test name="Account Page Tests">
-
+<parameter name="browser" value="firefox"></parameter>
 		<!-- Define classes to include in this test -->
 		<classes>
 			<class name="com.qa.opencart.test.AccountsPageTest" />
@@ -27,10 +28,11 @@
 	</test>
 	
 	<test name="Product Page Tests">
+	<parameter name="browser" value="edge"></parameter>
 
 		<!-- Define classes to include in this test -->
 		<classes>
-			<class name="com.qa.opencart.test.AccountsPageTest" />
+			<class name="com.qa.opencart.test.ProductPageTest" />
 
 		</classes>
 	</test>
